@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bir Şans Verir Misin?</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #f520ae, #354f85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      transition: background 1.2s ease;
+    }
+    .card {
+      text-align: center;
+      background: white;
+      border-radius: 18px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      color: #333;
+    }
+    p {
+      color: #777;
+      margin: 0 0 20px;
+    }
+    .question {
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+    button {
+      padding: 12px 32px;
+      border: none;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.25s ease, opacity 0.6s ease;
+    }
+    .btn-evet {
+      background: linear-gradient(90deg,#4b2704,#bf2b73);
+      color: white;
+    }
+    .btn-hayir {
+      background: #eee;
+      color: #444;
+      position: relative;
+    }
+    .btn-hayir.hide {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.2);
+    }
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 16px;
+    }
+
+    /* Evet sonrası görünüm */
+    .happy-screen {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      text-align: center;
+    }
+    .happy-screen.show {
+      display: flex;
+      animation: fadeIn 1.2s ease forwards;
+    }
+    .happy-text {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      background: rgba(255,255,255,0.6);
+      padding: 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .cat {
+      width: 120px;
+      height: auto;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: popIn 1.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity:0; transform: scale(0.95);}
+      to {opacity:1; transform: scale(1);}
+    }
+    @keyframes popIn {
+      0% {opacity:0; transform: scale(0.8);}
+      100% {opacity:1; transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="mainCard">
+    <h1>Gökçe 🌸</h1>
+    <p> Senden nazikçe bir şans istemek için buradayım.</p>
+    <div class="question">Benimle konuşmak ister misin?</div>
+    <div class="btns">
+      <button id="evet" class="btn-evet">Evet</button>
+      <button id="hayir" class="btn-hayir">Hayır</button>
+    </div>
+    <div class="hint">Hayır dersen kanagal üzülecek, evet dersen kangal çok mutlu olucak 💗</div>
+  </div>
+
+  <div class="happy-screen" id="happyScreen">
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.2s;">
+    <div class="happy-text">Çok mutlu oldum! 😊<br>Asla pişman olmayacaksın😊💗 </div>
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.5s;">
+  </div>
+
+  <script>
+    const evetBtn = document.getElementById('evet');
+    const hayirBtn = document.getElementById('hayir');
+    const mainCard = document.getElementById('mainCard');
+    const happyScreen = document.getElementById('happyScreen');
+    let moveCount = 0;
+
+    function moveHayir() {
+      if (moveCount < 4) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const randX = Math.random() * (vw - 120);
+        const randY = Math.random() * (vh - 60);
+        hayirBtn.style.position = 'fixed';
+        hayirBtn.style.left = randX + 'px';
+        hayirBtn.style.top = randY + 'px';
+        moveCount++;
+      } else {
+        hayirBtn.classList.add('hide');
+      }
+    }
+
+    hayirBtn.addEventListener('mouseenter', moveHayir);
+
+    evetBtn.addEventListener('click', () => {
+      document.body.style.background = "linear-gradient(180deg, #ffdbe6, #fff0f3)";
+      mainCard.style.display = "none";
+      happyScreen.classList.add('show');
+    });
+  </script>
+</body>
+</html>
