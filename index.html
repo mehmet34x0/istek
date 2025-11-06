@@ -90,6 +90,7 @@
         margin-top: 16px;
     }
 
+   
     .happy-screen {
         display: none;
        align-items: flex-start;
@@ -104,7 +105,7 @@
     }
 
     .happy-text {
-        font-size: 20px;
+        font-size: 25px;
         font-weight: 600;
         color: #fff;
         background: rgba(0,0,0,0.5);
@@ -153,16 +154,18 @@
     <div class="card" id="mainCard">
         <h1>💫 Gökçe 💫</h1>
         <p>Rukia gibi zarif ve ondan daha güzel bir kız olarak</p>
-        <div class="question">Bana Renji olma şansını tanır mısın?</div>
+        <div class="question">Bana Renji olma şansını tanır m?</div>
         <div class="btns">
             <button id="evet" class="btn-evet">Evet 💕</button>
             <button id="hayir" class="btn-hayir">Hayır 🙈</button>
-      
+        </div>
+        <div class="hint"></div>
+    </div>
 
   
     <div class="happy-screen" id="happyScreen">
         <div class="happy-text">
-            💕 Bu siteyi yapan kişi şu an dünyanın en tatlı ve en güzel kızının Evet demesi sonucu mutluluktan bayılmıştır 💕
+            💕 Bu kullanıcı şu an dünyanın en tatlı ve en güzel kızının "Evet" demesi sonucu bayılmıştır 💕
         </div>
     </div>
 
@@ -172,6 +175,7 @@
     const mainCard = document.getElementById('mainCard');
     const happyScreen = document.getElementById('happyScreen');
     let moveCount = 0;
+
 
     function moveHayir() {
         if (moveCount < 4) {
@@ -191,7 +195,7 @@
 
     hayirBtn.addEventListener('mouseenter', moveHayir);
 
-
+ 
     evetBtn.addEventListener('click', () => {
         mainCard.style.display = "none";
         document.body.style.backgroundImage = "url('https://cdn.weasyl.com/~northseafairy/submissions/1575995/ab8b2dd5a719ca5551866c7356e9113dcf0701ef747176e9c6041ec158570470/northseafairy-renji-x-rukia-valentines.png')";
@@ -205,5 +209,3 @@
 
 </body>
 </html>
-
-
