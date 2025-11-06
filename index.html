@@ -1,163 +1,211 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bir Şans Verir Misin?</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rukia & Spiderman 💖</title>
+<style>
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(180deg, #f520ae, #354f85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-      transition: background 1.2s ease;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: url("https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/08/rukia-bankai-hakka-no-togame-bleach-thousand-year-blood-war-part-2-episode-6.jpg?q=50&fit=crop&w=1600&h=900&dpr=1.5")
+                    no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        transition: background 1.2s ease;
     }
+
     .card {
-      text-align: center;
-      background: white;
-      border-radius: 18px;
-      padding: 40px 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 18px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        max-width: 420px;
     }
+
     h1 {
-      margin: 0 0 10px;
-      font-size: 28px;
-      color: #333;
+        margin: 0 0 10px;
+        font-size: 28px;
+        color: #ffb6c1;
     }
+
     p {
-      color: #777;
-      margin: 0 0 20px;
+        color: #f0f0f0;
+        margin: 0 0 20px;
     }
+
     .question {
-      font-weight: 600;
-      font-size: 20px;
-      margin-bottom: 20px;
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 8px #000;
     }
+
     .btns {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
     }
+
     button {
-      padding: 12px 32px;
-      border: none;
-      border-radius: 999px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: transform 0.25s ease, opacity 0.6s ease;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 999px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: transform 0.25s ease, opacity 0.6s ease;
     }
+
     .btn-evet {
-      background: linear-gradient(90deg,#4b2704,#bf2b73);
-      color: white;
+        background: linear-gradient(90deg,#ff80ab,#f50057);
+        color: white;
     }
+
+    .btn-evet:hover {
+        transform: scale(1.1);
+    }
+
     .btn-hayir {
-      background: #eee;
-      color: #444;
-      position: relative;
+        background: #eee;
+        color: #444;
+        position: relative;
     }
+
     .btn-hayir.hide {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.2);
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.2);
     }
+
     .hint {
-      font-size: 12px;
-      color: #999;
-      margin-top: 16px;
+        font-size: 12px;
+        color: #ccc;
+        margin-top: 16px;
     }
 
     /* Evet sonrası görünüm */
     .happy-screen {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
-      text-align: center;
+        display: none;
+       align-items: flex-start;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
     }
+
     .happy-screen.show {
-      display: flex;
-      animation: fadeIn 1.2s ease forwards;
+        display: flex;
+        animation: fadeIn 1.2s ease forwards;
     }
+
     .happy-text {
-      font-size: 22px;
-      font-weight: 600;
-      color: #333;
-      background: rgba(255,255,255,0.6);
-      padding: 20px 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    .cat {
-      width: 120px;
-      height: auto;
-      opacity: 0;
-      transform: scale(0.8);
-      animation: popIn 1.5s ease forwards;
+        font-size: 30px;
+        font-weight: 600;
+        color: #fff;
+        background: rgba(0,0,0,0.5);
+        padding: 20px 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
 
     @keyframes fadeIn {
-      from {opacity:0; transform: scale(0.95);}
-      to {opacity:1; transform: scale(1);}
+        from {opacity:0; transform: scale(0.95);}
+        to {opacity:1; transform: scale(1);}
     }
-    @keyframes popIn {
-      0% {opacity:0; transform: scale(0.8);}
-      100% {opacity:1; transform: scale(1);}
+
+    .spidey {
+        position: absolute;
+        width: 100px;
+        animation: moveSpidey 6s ease-in-out infinite alternate;
+        z-index: 1;
     }
-  </style>
+
+    .spidey:nth-child(1) {
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+
+    .spidey:nth-child(2) {
+        bottom: 10%;
+        right: 5%;
+        animation-delay: 3s;
+    }
+
+    @keyframes moveSpidey {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-25px) rotate(10deg); }
+        100% { transform: translateY(0) rotate(-10deg); }
+    }
+</style>
 </head>
 <body>
-  <div class="card" id="mainCard">
-    <h1>Gökçe 🌸</h1>
-    <p> Senden nazikçe bir şans istemek için buradayım.</p>
-    <div class="question">Benimle konuşmak ister misin?</div>
-    <div class="btns">
-      <button id="evet" class="btn-evet">Evet</button>
-      <button id="hayir" class="btn-hayir">Hayır</button>
+
+    <!-- 🕸️ Spiderman GIF'leri -->
+    <img class="spidey" src="https://media.tenor.com/Nv9JbR6bxmYAAAAC/spiderman-dance.gif" alt="">
+    <img class="spidey" src="https://media.tenor.com/5YjD-j2r9nIAAAAi/spider-man-dancing.gif" alt="">
+
+    <div class="card" id="mainCard">
+        <h1>💫 Gökçe 💫</h1>
+        <p>Rukia gibi zarif ve ondan daha güzel bir kız olarak</p>
+        <div class="question">Bana Renji olma şansını tanır mısın?</div>
+        <div class="btns">
+            <button id="evet" class="btn-evet">Evet 💕</button>
+            <button id="hayir" class="btn-hayir">Hayır 🙈</button>
+        </div>
+        <div class="hint">Hayır dersen ağlarım ama 5. denemede kaçar 😭</div>
     </div>
-    <div class="hint">Hayır dersen kangal üzülecek, evet dersen kangal çok mutlu olucak 💗</div>
-  </div>
 
-  <div class="happy-screen" id="happyScreen">
-    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.2s;">
-    <div class="happy-text">Çok mutlu oldum! 😊<br>Asla pişman olmayacaksın😊💗 </div>
-    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.5s;">
-  </div>
+    <!-- Evet sonrası ekran -->
+    <div class="happy-screen" id="happyScreen">
+        <div class="happy-text">
+            💕 Bu kullanıcı şu an dünyanın en tatlı ve en güzel kızının "Evet" demesi sonucu bayılmıştır 💕
+        </div>
+    </div>
 
-  <script>
+<script>
     const evetBtn = document.getElementById('evet');
     const hayirBtn = document.getElementById('hayir');
     const mainCard = document.getElementById('mainCard');
     const happyScreen = document.getElementById('happyScreen');
     let moveCount = 0;
 
+    // Hayır kaçma sistemi
     function moveHayir() {
-      if (moveCount < 4) {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const randX = Math.random() * (vw - 120);
-        const randY = Math.random() * (vh - 60);
-        hayirBtn.style.position = 'fixed';
-        hayirBtn.style.left = randX + 'px';
-        hayirBtn.style.top = randY + 'px';
-        moveCount++;
-      } else {
-        hayirBtn.classList.add('hide');
-      }
+        if (moveCount < 4) {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const randX = Math.random() * (vw - 150);
+            const randY = Math.random() * (vh - 60);
+            hayirBtn.style.position = 'fixed';
+            hayirBtn.style.left = randX + 'px';
+            hayirBtn.style.top = randY + 'px';
+            moveCount++;
+            hayirBtn.textContent = "Hayır 🙈" + " 😭".repeat(moveCount);
+        } else {
+            hayirBtn.classList.add('hide');
+        }
     }
 
     hayirBtn.addEventListener('mouseenter', moveHayir);
 
+    // Evet'e basınca
     evetBtn.addEventListener('click', () => {
-      document.body.style.background = "linear-gradient(180deg, #ffdbe6, #fff0f3)";
-      mainCard.style.display = "none";
-      happyScreen.classList.add('show');
+        mainCard.style.display = "none";
+        document.body.style.backgroundImage = "url('https://cdn.weasyl.com/~northseafairy/submissions/1575995/ab8b2dd5a719ca5551866c7356e9113dcf0701ef747176e9c6041ec158570470/northseafairy-renji-x-rukia-valentines.png')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundSize = "contain";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundColor = "#000";
+        happyScreen.classList.add('show');
     });
-  </script>
+</script>
+
 </body>
 </html>
-
