@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Günaydın Sevgilim ❤️</title>
+  <title>Günaydın </title>
   <style>
-    * { box-sizing: border-box; }
-
-    body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       height: 100vh;
       width: 100vw;
       overflow: hidden;
-      background: black;
+      background-color: black;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -21,148 +23,91 @@
       position: relative;
     }
 
-    /* Arka plan GIF */
+    /* Arka plan */
     .background {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(0.4); /* Küçültülmüş boyut */
-      z-index: 0;
+      transform: translate(-50%, -50%);
+      height: 100%;
       width: auto;
-      height: auto;
-      max-width: none;
-      max-height: none;
-      object-fit: contain;
+      object-fit: cover;
+      z-index: 0;
     }
 
     /* Mesaj kutusu */
     .message-box {
       position: absolute;
-      bottom: 12%;
+      top: 72%; /* dil hizasında */
       left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.45);
-      padding: 14px 24px;
-      border-radius: 16px;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 18px 28px;
+      border-radius: 18px;
       text-align: center;
       color: white;
       z-index: 2;
-      width: 85%;
-      max-width: 400px;
+      width: 90%;
+      max-width: 350px;
     }
 
     h1 {
       font-size: 1.8rem;
-      margin: 0 0 8px 0;
+      margin-bottom: 10px;
     }
 
     p {
-      font-size: 1rem;
-      margin: 0;
+      font-size: 1.05rem;
       line-height: 1.5;
     }
 
-    /* Kenarlardaki GIF kolonları */
-    .gif-column {
+    /* Kenarlardaki GIF'ler */
+    .gif {
       position: absolute;
-      top: 0;
-      height: 100vh;
-      width: 70px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
+      width: 80px;
       z-index: 1;
-      pointer-events: none;
-    }
-
-    .left { left: 0; }
-    .right { right: 0; }
-
-    .gif-column img {
-      width: 65px;
-      height: auto;
       animation: float 4s ease-in-out infinite;
     }
+
+    .gif1 { top: 5%; left: 2%; }
+    .gif2 { top: 40%; left: 2%; }
+    .gif3 { bottom: 5%; left: 2%; }
+    .gif4 { top: 5%; right: 2%; }
+    .gif5 { top: 40%; right: 2%; }
+    .gif6 { bottom: 5%; right: 2%; }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
 
-    /* Mobil uyumluluk */
-    @media (max-width: 768px) {
-      .background {
-        transform: translate(-50%, -50%) scale(0.3); /* Telefonda daha da küçük */
-      }
-      .gif-column {
-        width: 55px;
-      }
-      .gif-column img {
-        width: 55px;
-      }
-      .message-box {
-        width: 90%;
-        padding: 12px 18px;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      p {
-        font-size: 0.95rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .background {
-        transform: translate(-50%, -50%) scale(0.25); /* Küçücük — tam istediğin gibi */
-      }
-      .gif-column {
-        width: 50px;
-      }
-      .gif-column img {
-        width: 50px;
-      }
-      .message-box {
-        width: 92%;
-        padding: 10px 15px;
-      }
-      h1 {
-        font-size: 1.3rem;
-      }
-      p {
-        font-size: 0.9rem;
-      }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      p { font-size: 1rem; }
+      .gif { width: 65px; }
+      .message-box { top: 74%; }
     }
   </style>
 </head>
 <body>
-  <!-- Arka plan -->
-  <img src="https://media1.tenor.com/m/cY5-7wEBtmsAAAAC/cat-tongue.gif" alt="background" class="background">
+   <img src="https://media1.tenor.com/m/cY5-7wEBtmsAAAAC/cat-tongue.gif" alt="background" class="background">
 
-  <!-- Sol kenar GIF'leri -->
-  <div class="gif-column left">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-  </div>
-
-  <!-- Sağ kenar GIF'leri -->
-  <div class="gif-column right">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-    <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
-  </div>
+  <!-- Kenarlardaki GIF'ler -->
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif1">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif2">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif3">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif4">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif5">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif6">
 
   <!-- Mesaj -->
   <div class="message-box">
-    <h1>GÜNAYDIN ☀️</h1>
-    <p><strong>
-      Dünkü yanlış anlaşılmaya sebep olduğum için özür dilerim tekrardan 😽<br><br>
+    <h1>GÜNAYDIN 🌞</h1>
+    <p>
+      Dünkü yanlış anlaşılmaya sebep olduğum için<br>
+      özür dilerim tekrardan 😽<br><br>
       Günün senin kadar güzel geçsin 💖
-    </strong></p>
+    </p>
   </div>
 </body>
 </html>
