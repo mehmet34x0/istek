@@ -1,48 +1,127 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Özür Mesajı</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWgxN3dxazU5dmFwZm9oaDFoZXkxbGQzMmhpdXk0cnR6OG84c3dxayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PX6E0iX4x1O7fQ4pgt/giphy.gif') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Günaydın Sevgilim ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      font-family: "Poppins", Arial, sans-serif;
+    }
 
-        .message-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.55);
-            padding: 25px 35px;
-            border-radius: 12px;
-            text-align: center;
-            color: white;
-            font-size: 1.4rem;
-            max-width: 80%;
-        }
+    /* Arka plan GIF */
+    .background {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      z-index: 0;
+    }
 
-        h1 {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: bold;
-        }
 
-        p {
-            margin-top: 12px;
-        }
-    </style>
+    .message-box {
+      position: absolute;
+      top: 68%; 
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 15px 30px;
+      border-radius: 16px;
+      text-align: center;
+      color: white;
+      z-index: 2;
+      max-width: 90%;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin: 0 0 10px 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -40%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+
+    .gif {
+      position: absolute;
+      width: 90px;
+      z-index: 1;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    /* Sol taraf */
+    .gif1 { top: 5%; left: 2%; animation-delay: 0s; }
+    .gif2 { top: 40%; left: 2%; animation-delay: 1s; }
+    .gif3 { bottom: 5%; left: 2%; animation-delay: 2s; }
+    .gif7{ top: 5%; left: 2%; animation-delay: 0s; }
+    .gif8{ top: 40%; left: 2%; animation-delay: 1s; }
+    .gif9{ bottom: 5%; left: 2%; animation-delay: 2s; }
+    /* Sağ taraf */
+    .gif4 { top: 5%; right: 2%; animation-delay: 0.5s; }
+    .gif5 { top: 40%; right: 2%; animation-delay: 1.5s; }
+    .gif6 { bottom: 5%; right: 2%; animation-delay: 2.5s; }
+  
+
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      p { font-size: 1rem; }
+      .gif { width: 65px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="message-box">
-        <h1>ÖZÜR DİLERİM</h1>
-        <p>Yanlış anlaşıldıysam veya rahatsız ettiysem gerçekten özür dilerim.</p>
-    </div>
+
+  <img src="https://media1.tenor.com/m/cY5-7wEBtmsAAAAC/cat-tongue.gif" alt="background" class="background">
+
+  
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif1">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif2">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif3">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif4">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif5">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif6">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif7">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif8">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif9">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif10">
+   <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif11">
+  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif12">
+
+  <div class="message-box">
+    <h1>GÜNAYDIN ☀️</h1>
+    <p><strong>
+      Dünkü yanlış anlaşılmaya sebep olduğum için özür dilerim tekrardan😽<br><br>
+      Günün senin kadar güzel geçsin<br>
+      
+   </strong> </p>
+  </div>
 </body>
 </html>
