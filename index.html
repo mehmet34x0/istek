@@ -5,42 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Günaydın Sevgilim ❤️</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 0;
-      height: 40vh;
-      width: 40vw;
+      height: 100vh;
+      width: 100vw;
       overflow: hidden;
-      background-color: black;
+      background: black;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
       font-family: "Poppins", Arial, sans-serif;
+      position: relative;
     }
 
-    
+    /* Arka plan GIF */
     .background {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      height: 100%;
-      width: auto;
-      object-fit: contain;
+      transform: translate(-50%, -50%) scale(0.4); /* Küçültülmüş boyut */
       z-index: 0;
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      object-fit: contain;
     }
 
+    /* Mesaj kutusu */
     .message-box {
       position: absolute;
       bottom: 12%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.45);
       padding: 14px 24px;
       border-radius: 16px;
       text-align: center;
@@ -61,7 +62,7 @@
       line-height: 1.5;
     }
 
-
+    /* Kenarlardaki GIF kolonları */
     .gif-column {
       position: absolute;
       top: 0;
@@ -75,13 +76,8 @@
       pointer-events: none;
     }
 
-    .left {
-      left: 0;
-    }
-
-    .right {
-      right: 0;
-    }
+    .left { left: 0; }
+    .right { right: 0; }
 
     .gif-column img {
       width: 65px;
@@ -94,8 +90,11 @@
       50% { transform: translateY(-10px); }
     }
 
-
+    /* Mobil uyumluluk */
     @media (max-width: 768px) {
+      .background {
+        transform: translate(-50%, -50%) scale(0.3); /* Telefonda daha da küçük */
+      }
       .gif-column {
         width: 55px;
       }
@@ -115,6 +114,9 @@
     }
 
     @media (max-width: 480px) {
+      .background {
+        transform: translate(-50%, -50%) scale(0.25); /* Küçücük — tam istediğin gibi */
+      }
       .gif-column {
         width: 50px;
       }
@@ -135,10 +137,10 @@
   </style>
 </head>
 <body>
-
+  <!-- Arka plan -->
   <img src="https://media1.tenor.com/m/cY5-7wEBtmsAAAAC/cat-tongue.gif" alt="background" class="background">
 
-
+  <!-- Sol kenar GIF'leri -->
   <div class="gif-column left">
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
@@ -146,6 +148,7 @@
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
   </div>
 
+  <!-- Sağ kenar GIF'leri -->
   <div class="gif-column right">
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
@@ -153,6 +156,7 @@
     <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif">
   </div>
 
+  <!-- Mesaj -->
   <div class="message-box">
     <h1>GÜNAYDIN ☀️</h1>
     <p><strong>
@@ -162,4 +166,3 @@
   </div>
 </body>
 </html>
-
