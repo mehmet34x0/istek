@@ -1,117 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Günaydın </title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bir Şans Verir Misin?</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      height: 85vh;
-      width: auto;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #f520ae, #354f85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       overflow: hidden;
-      background-color: black;
+      transition: background 1.2s ease;
+    }
+    .card {
+      text-align: center;
+      background: white;
+      border-radius: 18px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      color: #333;
+    }
+    p {
+      color: #777;
+      margin: 0 0 20px;
+    }
+    .question {
+      font-weight: 600;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .btns {
       display: flex;
       justify-content: center;
-      align-items: center;
-      font-family: "Poppins", Arial, sans-serif;
+      gap: 40px;
+    }
+    button {
+      padding: 12px 32px;
+      border: none;
+      border-radius: 999px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.25s ease, opacity 0.6s ease;
+    }
+    .btn-evet {
+      background: linear-gradient(90deg,#4b2704,#bf2b73);
+      color: white;
+    }
+    .btn-hayir {
+      background: #eee;
+      color: #444;
       position: relative;
     }
-
-    /* Arka plan */
-    .background {
-      position: absolute;
-      top: 50%;
-      left: 58%;
-      transform: translate(-50%, -50%);
-      height: 100%;
-      width: auto;
-      object-fit: cover;
-      z-index: 0;
+    .btn-hayir.hide {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.2);
+    }
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 16px;
     }
 
-    /* Mesaj kutusu */
-    .message-box {
-      position: absolute;
-      top: 72%; /* dil hizasında */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.4);
-      padding: 18px 28px;
-      border-radius: 18px;
+    /* Evet sonrası görünüm */
+    .happy-screen {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
       text-align: center;
-      color: white;
-      z-index: 2;
-      width: 90%;
-      max-width: 350px;
+    }
+    .happy-screen.show {
+      display: flex;
+      animation: fadeIn 1.2s ease forwards;
+    }
+    .happy-text {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      background: rgba(255,255,255,0.6);
+      padding: 20px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .cat {
+      width: 120px;
+      height: auto;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: popIn 1.5s ease forwards;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
+    @keyframes fadeIn {
+      from {opacity:0; transform: scale(0.95);}
+      to {opacity:1; transform: scale(1);}
     }
-
-    p {
-      font-size: 1.05rem;
-      line-height: 1.5;
-    }
-
-    /* Kenarlardaki GIF'ler */
-    .gif {
-      position: absolute;
-      width: 80px;
-      z-index: 1;
-      animation: float 4s ease-in-out infinite;
-    }
-
-    .gif1 { top: 5%; left: 2%; }
-    .gif2 { top: 40%; left: 2%; }
-    .gif3 { bottom: 5%; left: 2%; }
-    .gif4 { top: 5%; right: 2%; }
-    .gif5 { top: 40%; right: 2%; }
-    .gif6 { bottom: 5%; right: 2%; }
-
-    @keyframes float {
-      0%, 100% { transform: translate(-50%, -50%) scale(0.5); }
-      50% { transform: translateY(-10px); }
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 1.5rem; }
-      p { font-size: 1rem; }
-      .gif { width: 65px; }
-      .message-box { top: 74%; }
+    @keyframes popIn {
+      0% {opacity:0; transform: scale(0.8);}
+      100% {opacity:1; transform: scale(1);}
     }
   </style>
 </head>
 <body>
-   <img src="https://media1.tenor.com/m/cY5-7wEBtmsAAAAC/cat-tongue.gif" alt="background" class="background">
-
-  <!-- Kenarlardaki GIF'ler -->
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif1">
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif2">
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif3">
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif4">
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif5">
-  <img src="https://media.tenor.com/L8hdRMfVSsEAAAAi/goodmorning.gif" class="gif gif6">
-
-  <!-- Mesaj -->
-  <div class="message-box">
-    <h1>🌞 GÜNAYDIN 🌞</h1>
-    <p>
-      Dünkü yanlış anlaşılmaya sebep olduğum için<br>
-      özür dilerim tekrardan <br><br>
-      Günün senin kadar güzel geçsin 
-    </p>
+  <div class="card" id="mainCard">
+    <h1>Gökçe </h1>
+    <p> umraım hala senle tanışma fırsatını bana tanıyorsundur </p>
+    <div class="question"></div>
+    <div class="btns">
+      <button id="evet" class="btn-evet">Evet</button>
+      <button id="hayir" class="btn-hayir">Hayır</button>
+    </div>
+    <div class="hint"></div>
   </div>
+
+  <div class="happy-screen" id="happyScreen">
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.2s;">
+    <div class="happy-text">Çok mutlu oldum tekrardan  😊<br> </div>
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" class="cat" style="animation-delay:0.5s;">
+  </div>
+
+  <script>
+    const evetBtn = document.getElementById('evet');
+    const hayirBtn = document.getElementById('hayir');
+    const mainCard = document.getElementById('mainCard');
+    const happyScreen = document.getElementById('happyScreen');
+    let moveCount = 0;
+
+    function moveHayir() {
+      if (moveCount < 4) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const randX = Math.random() * (vw - 120);
+        const randY = Math.random() * (vh - 60);
+        hayirBtn.style.position = 'fixed';
+        hayirBtn.style.left = randX + 'px';
+        hayirBtn.style.top = randY + 'px';
+        moveCount++;
+      } else {
+        hayirBtn.classList.add('hide');
+      }
+    }
+
+    hayirBtn.addEventListener('mouseenter', moveHayir);
+
+    evetBtn.addEventListener('click', () => {
+      document.body.style.background = "linear-gradient(180deg, #ffdbe6, #fff0f3)";
+      mainCard.style.display = "none";
+      happyScreen.classList.add('show');
+    });
+  </script>
 </body>
 </html>
-
-
-
-
