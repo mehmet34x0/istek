@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İyi Geceler 🌙</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Poppins", Arial, sans-serif;
+      position: relative;
+    }
+
+    /* Arka plan */
+    .background {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100%;
+      width: auto;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.6);
+    }
+
+    /* Mesaj kutusu */
+    .message-box {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 25, 0.85);
+      padding: 22px 32px;
+      border-radius: 18px;
+      text-align: center;
+      color: white;
+      z-index: 2;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 0 20px rgba(200, 200, 255, 0.25);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    /* Kenarlardaki GIF'ler */
+    .gif {
+      position: absolute;
+      width: 80px;
+      z-index: 1;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .gif1 { top: 5%; left: 2%; }
+    .gif2 { top: 40%; left: 2%; }
+    .gif3 { bottom: 5%; left: 2%; }
+    .gif4 { top: 5%; right: 2%; }
+    .gif5 { top: 40%; right: 2%; }
+    .gif6 { bottom: 5%; right: 2%; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      p { font-size: 1rem; }
+      .gif { width: 65px; }
+      .message-box { bottom: 8%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Arka plan -->
+  <img src="https://media.tenor.com/ETjEBRnoCRgAAAAe/rukia-rukia-kuchiki.png" alt="background" class="background">
+
+  <!-- Kenarlardaki GIF'ler -->
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif1">
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif2">
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif3">
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif4">
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif5">
+  <img src="https://media.tenor.com/btiv2b2i_78AAAAi/good-night.gif" class="gif gif6">
+
+  <!-- Mesaj -->
+  <div class="message-box">
+    <h1>İYİ GECELER 🌙</h1>
+    <p>
+    🌌<br>
+    </p>
+  </div>
+</body>
+</html>
