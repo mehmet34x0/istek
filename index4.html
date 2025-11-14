@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Animasyonlu Site</title>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #000;
+        overflow: hidden;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    #bg {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100vw;
+        max-height: 100vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        z-index: 1;
+    }
+
+    
+    #overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    #msg {
+        pointer-events: auto;
+        background: rgba(0,0,0,0.55);
+        color: #fff;
+        padding: 16px 22px;
+        border-radius: 12px;
+        font-size: clamp(20px, 4vw, 34px);
+        text-align: center;
+        max-width: 90%;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 300ms ease, transform 300ms ease;
+    }
+
+    
+    #msg.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+</head>
+<body>
+
+<img id="bg" src="https://media1.tenor.com/m/0npkBNCZ-vAAAAAC/caramelladansen-dance.gif" alt="background" />
+<div id="overlay">
+    <div id="msg">Merhaba Gökçe...</div>
+</div>
+
+<script>
+
+
+const scenes = [
+  { src: 'https://media1.tenor.com/m/0npkBNCZ-vAAAAAC/caramelladansen-dance.gif', text: 'Selam Gökçe...', at: 0 },
+  { src: 'https://media1.tenor.com/m/hYZSSAStv8EAAAAd/bleach-rukia.gif', text: 'Bu da ne o kadar tatlısın ki site görevini yapamıyor...', at: 1800 },
+
+  { src: 'https://media1.tenor.com/m/xOtItyViyscAAAAC/rukia.gif', text: 'Aa... aa... galiba işimi yapmadığımdan dolayı düşüyorum...', at: 3600 },
+  { src: 'https://media.tenor.com/HLU81hLh_zUAAAAi/cat-falling.gif', text: ' pişman değilimmmm!', at: 5400 }
+];
+
+const bg = document.getElementById('bg');
+const msg = document.getElementById('msg');
+let timers = [];
+
+function clearAllTimers() {
+  timers.forEach(t => clearTimeout(t));
+  timers = [];
+}
+
+function scheduleScenes(arr) {
+  clearAllTimers();
+  arr.forEach(scene => {
+    const t = setTimeout(() => {
+      
+      bg.src = scene.src;
+      msg.textContent = scene.text || '';
+    
+      msg.classList.add('show');
+
+      
+    }, scene.at);
+    timers.push(t);
+  });
+}
+
+window.addEventListener('load', () => scheduleScenes(scenes));
+
+
+</script>
+
+</body>
+</html>
