@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Özür </title>
+<title>Özür Mesajı</title>
 
 <style>
     body {
@@ -12,17 +12,20 @@
         height: 100vh;
         width: 100vw;
         overflow: hidden;
-        background: #000; /* Yan boşluklar siyah */
+        background: #000; /* YAN BOŞLUKLAR SİYAH */
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
     }
 
+    /* DİK UZUN – GENİŞLİK KÜÇÜK */
     .container {
+        height: 100vh;      /* DİK BOY TAM */
+        width: auto;        /* GENİŞLİK KÜÇÜK KALIR */
         display: flex;
-        width: 70vw;       /* küçültme */
-        height: 80vh;      /* diklemesine daha uzun */
+        aspect-ratio: 9 / 16;   /* TikTok / Reels oranı */
+        max-width: 420px;       /* telefon için limit */
     }
 
     .half {
@@ -40,16 +43,17 @@
         background-image: url("https://media1.tenor.com/m/8kaGk1fMHVEAAAAC/sorry-im-sorry.gif");
     }
 
+    /* YAZI */
     #text {
         position: fixed;
-        bottom: 40px;
+        bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         color: white;
+        font-size: 22px;
         background: rgba(0,0,0,0.55);
-        padding: 16px 24px;
-        border-radius: 12px;
-        font-size: 24px;
+        padding: 14px 20px;
+        border-radius: 10px;
         text-align: center;
         max-width: 90%;
     }
@@ -63,7 +67,7 @@
 </div>
 
 <div id="text">
-    Özür dilerim GÖKÇE <br>
+    Özür dilerim,<br>
     umarım bu salak yazılım mühendisini affedersin
 </div>
 
