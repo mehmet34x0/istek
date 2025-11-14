@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Özür</title>
+<title>Özür </title>
 
 <style>
     body {
@@ -12,14 +12,22 @@
         height: 100vh;
         width: 100vw;
         overflow: hidden;
+        background: #000; /* Yan boşluklar siyah */
         display: flex;
-        background: #000; /* Kenarlarda siyah boşluk olsun */
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .container {
+        display: flex;
+        width: 70vw;       /* küçültme */
+        height: 80vh;      /* diklemesine daha uzun */
     }
 
     .half {
-        width: 50%;
-        height: 100%;
-        background-size: contain;   /* TAŞMIYOR */
+        flex: 1;
+        background-size: contain;   /* TAŞMA YOK */
         background-repeat: no-repeat;
         background-position: center;
     }
@@ -34,26 +42,28 @@
 
     #text {
         position: fixed;
-        top: 50%;
+        bottom: 40px;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translateX(-50%);
         color: white;
-        font-size: 26px;
         background: rgba(0,0,0,0.55);
-        padding: 16px 20px;
+        padding: 16px 24px;
         border-radius: 12px;
+        font-size: 24px;
         text-align: center;
-        max-width: 85%;
+        max-width: 90%;
     }
 </style>
 </head>
 <body>
 
-<div class="half" id="left"></div>
-<div class="half" id="right"></div>
+<div class="container">
+    <div class="half" id="left"></div>
+    <div class="half" id="right"></div>
+</div>
 
 <div id="text">
-    Özür dilerim,<br>
+    Özür dilerim GÖKÇE <br>
     umarım bu salak yazılım mühendisini affedersin
 </div>
 
