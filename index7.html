@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        /* ARKA PLAN – uzunlamasına, yanlarda boşluk kalacak */
+        background-image: url("https://media1.tenor.com/m/mUA8UrbN9KoAAAAC/pengu-pudgy.gif");
+        background-repeat: no-repeat;
+        background-size: contain;   /* Yanlarda boşluk bırakır */
+        background-position: center;
+        background-color: black;    /* Boşluklar siyah olur */
+    }
+
+    /* MERHABA yazısı */
+    #msg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 45px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 10;
+    }
+
+    /* Bomba düşme animasyonu */
+    @keyframes fallReal {
+        0% { transform: translate(-50%, -150%); }
+        100% { transform: translate(-50%, 250px); }
+    }
+
+    #bomb {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 90px;
+        transform: translate(-50%, -150%);
+        z-index: 5;
+        opacity: 0;
+    }
+
+    #boom {
+        position: absolute;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 260px;
+        display: none;
+        z-index: 20;
+    }
+</style>
+</head>
+<body>
+
+<div id="msg">29mü elendi</div>
+
+<!-- BOMBA -->
+<img id="bomb" src="https://media1.tenor.com/m/mUA8UrbN9KoAAAAC/pengu-pudgy.gif">
+
+<!-- PATLAMA -->
+<img id="boom" src="https://media.tenor.com/YqcMumgGWIUAAAAi/peach-cat.gif">
+
+<script>
+window.onload = () => {
+    const bomb = document.getElementById("bomb");
+    const boom = document.getElementById("boom");
+
+    setTimeout(() => {
+        bomb.style.opacity = "1";
+        bomb.style.animation = "fallReal 1.2s linear forwards";
+
+        setTimeout(() => {
+            bomb.style.opacity = "0";
+            boom.style.display = "block";
+
+            setTimeout(() => {
+                boom.style.display = "none";
+            }, 700);
+
+        }, 1200);
+
+    }, 400);
+};
+</script>
+
+</body>
+</html>
