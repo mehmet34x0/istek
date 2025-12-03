@@ -1,79 +1,370 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pinterest Arka Plan — Şeffaf Kutulu Başlık</title>
-  <style>
-   
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{
-      background-image: url('https://media1.tenor.com/m/c5y1J0FSfh0AAAAd/rukia-kuchiki-bleach.gif');
-    background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-      display:flex;
-      align-items:flex-start; 
-      justify-content:center;
-      min-height:100vh;
-      padding-top:5vh;
-      color:white;
-    }
-    body{
-     
-      background-image: url('background.jpg');
-      background-size: cover; 
-      background-position: center center;
-      background-repeat: no-repeat;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-      display:flex;align-items:center;justify-content:center;min-height:100vh;
-      color:white;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>İkinci Şans</title>
+    <style>
+        /* --- GENEL AYARLAR --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            /* iPhone adres çubuğu sorununu çözen özel yükseklik ayarı */
+            height: 100vh; 
+            height: 100dvh; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            overflow: hidden; /* Kaydırmayı engelle */
+            -webkit-tap-highlight-color: transparent; /* Mobilde tıklama gölgesini kaldır */
+        }
 
-    /* Şeffaf kutu */
-    .overlay-box{
-      max-width:600px;
-      width:70%;
-      padding:1.5rem 1rem;
-      border-radius:16px;
-      background: rgba(255,255,255,0.14);
-      backdrop-filter: blur(6px) saturate(120%);
-      -webkit-backdrop-filter: blur(6px) saturate(120%);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
-      text-align:center;
-      border: 1px solid rgba(255,255,255,0.18);
-      margin-top: 40vh; /* daha aşağıda */
-    }
+        /* Tüm aşamaları kapsayan genel stil */
+        .stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Mobilde arka planın tam oturması için */
+            background-size: cover; 
+            background-position: center center;
+            background-repeat: no-repeat;
+            
+            transition: opacity 1.5s ease-in-out; 
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            padding: 20px; /* Kenarlardan boşluk bırak */
+            box-sizing: border-box;
+        }
 
-    h1{
-      font-size: clamp(1.8rem, 4.5vw, 3.6rem);
-      line-height:1.05;
-      margin-bottom:0.6rem;
-      font-weight:700;
-      letter-spacing: -0.02em;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.45);
-    }
+        .stage.active {
+            opacity: 1;
+            pointer-events: all;
+        }
 
-    p.lead{
-      font-size: clamp(1rem,2.2vw,1.25rem);
-      opacity:0.95;
-      margin-top:0.3rem;
-    }
+        /* --- BAŞLANGIÇ BUTONU EKRANI --- */
+        #start-screen {
+            z-index: 999;
+            background-color: black;
+            color: white;
+            flex-direction: column;
+        }
+        
+        .start-btn {
+            padding: 15px 30px;
+            font-size: 1.5rem; /* Mobilde daha okunaklı boyut */
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            border-radius: 50px;
+        }
+        .start-btn:active {
+            background: white;
+            color: black;
+        }
 
-   
-    @media (max-width:420px){
-      .overlay-box{padding:2rem 1rem;border-radius:12px}
-    }
-  </style>
+        /* --- AŞAMA 1: GİRİŞ (HARD ROCK) --- */
+        #stage-1 {
+            background-image: url('https://www.rollingstone.com/wp-content/uploads/2020/08/GettyImages-1164638362.jpg');
+        }
+        
+        .zoom-anim {
+            animation: zoomInFade 5s ease-out forwards;
+        }
+
+        /* --- AŞAMA 2: SORU EKRANI (AKUSTİK MÜZİK) --- */
+        #stage-2 {
+            background-image: url('https://media1.tenor.com/m/XCsXPrtaJXgAAAAC/catroll-ricroll.gif');
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        #stage-2::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        .question-text {
+            font-size: 1.5rem; /* Mobilde taşmaması için küçülttük */
+            line-height: 1.4;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,1);
+            opacity: 0;
+            z-index: 1;
+            width: 90%; /* Ekranın %90'ını kaplasın */
+        }
+        
+        .fade-up-anim {
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .button-container {
+            position: relative;
+            display: flex;
+            flex-direction: column; /* Mobilde butonlar alt alta olsun */
+            gap: 15px;
+            opacity: 0;
+            z-index: 1;
+            width: 100%;
+            align-items: center;
+        }
+        
+        /* Tablet ve üstü için butonları yan yana yap */
+        @media (min-width: 768px) {
+            .button-container {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .question-text {
+                font-size: 2rem;
+            }
+        }
+
+        .fade-up-anim-delay {
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+
+        .btn {
+            padding: 15px 0; /* Genişlik ayarı */
+            width: 200px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .btn-yes { background-color: #2ecc71; color: white; }
+        .btn-no { background-color: #e74c3c; color: white; position: relative; }
+
+
+        /* --- AŞAMA 3 - HAYIR SEÇENEĞİ (KATANA) --- */
+        /* MOBİL İÇİN KATANA AYARLARI */
+        #katana-overlay {
+            position: absolute;
+            /* Hayır butonunun olduğu yere göre değil, ekranın ortasına göre hizalayalım */
+            top: -100px; 
+            left: 50%;
+            transform: translateX(-50%); /* Tam ortala */
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            width: 300px; /* Genişlik sınırı */
+        }
+        
+        .katana-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .katana-img {
+            width: 180px; /* Mobilde biraz daha küçük */
+            animation: slashIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.5));
+        }
+
+        .speech-bubble {
+            position: relative; /* Absolute yerine relative yaptık mobilde kaymasın diye */
+            margin-top: -40px; /* Katananın üstüne binmesin */
+            margin-left: 50px; /* Biraz sağa */
+            background-color: white;
+            color: black;
+            padding: 15px;
+            border-radius: 20px;
+            width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            opacity: 0;
+            font-size: 0.9rem;
+            text-align: left;
+            animation: popIn 0.5s ease-out 0.6s forwards;
+        }
+        
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            left: -10px; /* Ok yönü */
+            top: 50%;
+            border: 10px solid transparent;
+            border-right-color: white;
+            margin-top: -10px;
+        }
+        
+        .rukia-sign {
+            display: block;
+            margin-top: 5px;
+            font-style: italic;
+            text-align: right;
+            font-weight: bold;
+            color: #d63031;
+            font-size: 0.8rem;
+        }
+
+        /* --- AŞAMA 4 - EVET SONUCU (ZÜRAFA) --- */
+        #stage-3-yes {
+            background-image: url('https://media1.tenor.com/m/XnyAu4Z6TpgAAAAC/dancing-giraffe.gif');
+        }
+        
+        .thank-you-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            text-shadow: 3px 3px 8px rgba(0,0,0,1);
+            background-color: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 15px;
+            animation: rotateInUp 1s ease-out forwards;
+            width: 90%;
+        }
+
+
+        /* --- KEYFRAMES --- */
+        @keyframes zoomInFade {
+            0% { opacity: 0; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slashIn {
+            0% { opacity: 0; transform: translateX(-50px) rotate(-20deg); }
+            100% { opacity: 1; transform: translateX(0) rotate(0deg); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            80% { transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+         @keyframes rotateInUp {
+            0% { opacity: 0; transform: translateY(50px) rotate(-10deg); }
+            100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+        }
+
+    </style>
 </head>
 <body>
-  <div class="overlay-box" role="region" aria-label="Öne çıkan başlık">
-    <h1>Birincisi bunun Okuyan kişi😅 </h1>
-    <p class="lead"></p>
-  </div>
 
-  
+    <audio id="audio-intro" src="guitar-riff-30011.mp3" preload="auto"></audio>
+    <audio id="audio-acoustic" src="acoustic-guitar-riff-3-237215.mp3" preload="auto" loop></audio>
+
+    <div id="start-screen" class="stage active">
+        <button id="btnStart" class="start-btn">BAŞLAT</button>
+    </div>
+
+    <div id="stage-1" class="stage"></div>
+
+    <div id="stage-2" class="stage">
+        <h1 class="question-text">gökçe lütfen insta engelimi kaldırıp tekrara takipleşebiliri.</h1>
+        
+        <div class="button-container">
+            <button class="btn btn-yes" id="btnYes">tamam tamam olur</button>
+            <button class="btn btn-no" id="btnNo">hayır</button>
+            
+            <div id="katana-overlay">
+                <div class="katana-wrapper">
+                    <img src="https://www.mangadori.com/photo/katana/2000000012002_9_400.jpg" alt="Katana" class="katana-img">
+                    <div class="speech-bubble">
+                        bakk insanlart ikinci şansı hak eder özellikle yazılım mühendisleri onlar yanlış anlaşılamaya açık''
+                        <span class="rukia-sign">-rukia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stage-3-yes" class="stage">
+         <h1 class="thank-you-text">teşşekür ederim çok mutlu olsum.</h1>
+    </div>
+
+
+    <script>
+        const startScreen = document.getElementById('start-screen');
+        const btnStart = document.getElementById('btnStart');
+        
+        const stage1 = document.getElementById('stage-1');
+        const stage2 = document.getElementById('stage-2');
+        const stage3Yes = document.getElementById('stage-3-yes');
+        
+        const questionText = document.querySelector('.question-text');
+        const btnContainer = document.querySelector('.button-container');
+
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const katanaOverlay = document.getElementById('katana-overlay');
+        
+        const audioIntro = document.getElementById('audio-intro');
+        const audioAcoustic = document.getElementById('audio-acoustic');
+
+        audioIntro.volume = 1.0;    
+        audioAcoustic.volume = 0.5; 
+
+        // --- 1. BAŞLAT BUTONU ---
+        btnStart.addEventListener('click', () => {
+            startScreen.classList.remove('active');
+            
+            stage1.classList.add('active');
+            stage1.classList.add('zoom-anim'); 
+
+            audioIntro.play().catch(e => alert("Gitar sesi bulunamadı! Dosyalar aynı klasörde mi?"));
+
+            // 5 SANİYE SONRA
+            setTimeout(() => {
+                audioIntro.pause();
+                audioIntro.currentTime = 0;
+
+                stage1.classList.remove('active');
+                
+                stage2.classList.add('active');
+                questionText.classList.add('fade-up-anim');
+                btnContainer.classList.add('fade-up-anim-delay');
+                
+                audioAcoustic.play().catch(e => console.log("Akustik ses hatası"));
+
+            }, 5000); 
+        });
+
+
+        // --- HAYIR BUTONU ---
+        btnNo.addEventListener('click', () => {
+            btnNo.disabled = true;
+            btnNo.style.opacity = '0';
+            btnNo.style.display = 'none'; // Mobilde yer kaplamasın diye tamamen kaldır
+            katanaOverlay.style.display = 'flex';
+        });
+
+
+        // --- EVET BUTONU ---
+        btnYes.addEventListener('click', () => {
+             audioAcoustic.pause(); 
+
+             stage2.style.transition = "opacity 0.5s ease"; 
+             stage3Yes.style.transition = "opacity 0.5s ease";
+
+             stage2.classList.remove('active');
+
+            setTimeout(() => {
+                stage3Yes.classList.add('active');
+            }, 500);
+        });
+
+    </script>
 </body>
 </html>
-
