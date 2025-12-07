@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> deneyelim bakalım </title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black; 
+        }
+
+      
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+           
+            background-size: contain; 
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            color: white;
+            text-shadow: 2px 2px 8px #000000;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+     
+        #start-screen {
+            background-color: #111;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        #start-screen h1 {
+            font-size: 2rem;
+            animation: pulse 1.5s infinite;
+            border: 1px solid white;
+            padding: 20px;
+            text-align: center;
+        }
+
+       
+        #stage-1 {
+            background-image: url('https://media1.tenor.com/m/IkTrtCfb0z4AAAAd/zanguetsu.gif');
+            display: none;
+            z-index: 5;
+        }
+
+       
+        #stage-2 {
+            background-image: url('https://media1.tenor.com/m/e9HWAHm8pxYAAAAd/thank-you-the-creature.gif');
+            display: none;
+            z-index: 6;
+        }
+
+      
+        .content-box {
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%; 
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            
+         
+            margin-top: 40%; 
+        }
+
+       
+        @media (min-width: 768px) {
+            .content-box {
+                margin-top: 35%; 
+                font-size: 1.5rem;
+            }
+        }
+
+        .signature {
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" class="screen" onclick="startExperience()">
+        <h1> BURAYA TIKLA GÖKÇE</h1>
+    </div>
+
+    <div id="stage-1" class="screen">
+        <div class="content-box">
+            "Gökçe iyi biriyle engelli kalmak beni rahatsız eder eğer istersen(bilmiyorum evet olabilir ) geri takipleşelim if it happens I'll give you everything I have. Should you place your trust in me…"
+            <span class="signature">- ZANGETSU MEHMET</span>
+        </div>
+    </div>
+
+    <div id="stage-2" class="screen">
+        <div class="content-box">
+            eğer evet olursa yazılım mühendisi,anime izleyen,spor yapan,su içmeyi seven ve kedileri seven bu kişi mutlu olucucak efendim.(baskı vs tabikide yok olamaz zaten amk mizahsen olsun diye yazdım bunu efendim).
+        </div>
+    </div>
+
+    <audio id="audio-rain" src="gentle-rain-for-relaxation-and-sleep-337279.mp3"></audio>
+    <audio id="audio-violin" src="violin-music-64019.mp3"></audio>
+
+    <script>
+        function startExperience() {
+            const startScreen = document.getElementById('start-screen');
+            const stage1 = document.getElementById('stage-1');
+            const stage2 = document.getElementById('stage-2');
+            
+            const rainAudio = document.getElementById('audio-rain');
+            const violinAudio = document.getElementById('audio-violin');
+
+          
+            startScreen.style.display = 'none';
+            stage1.style.display = 'flex';
+
+            rainAudio.volume = 1.0;
+            rainAudio.play();
+
+           
+            setTimeout(() => {
+             
+                stage1.style.display = 'none';
+                stage2.style.display = 'flex';
+
+            
+                rainAudio.pause();
+                rainAudio.currentTime = 0;
+                
+                violinAudio.volume = 1.0;
+                violinAudio.play();
+
+            }, 5500); 
+        }
+    </script>
+
+</body>
+</html>
