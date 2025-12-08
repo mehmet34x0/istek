@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ufak spoiler</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #scene-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column; /* Alt alta dizilim */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- GÜNCELLENEN KISIM: RESİM BOYUTLARI --- */
+        #character-img {
+            /* Genişlik ve Yükseklik sınırlarını artırdık */
+            width: 95%;  
+            height: 85vh; /* Ekranın %85'i kadar yüksek olsun (yazıya yer kalsın) */
+            
+            /* Görüntüyü BOZMADAN sığdır */
+            object-fit: contain; 
+            
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            
+            /* Hafif gölge */
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+        }
+
+        /* Konuşma Balonu */
+        #dialogue-box {
+            position: absolute; /* Resmin üzerine/altına bağımsız yerleşsin */
+            bottom: 5%;         /* Ekranın altından %5 yukarıda */
+            
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #555;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            text-align: center;
+            z-index: 10; /* Resmin önünde dursun */
+            
+            /* Başlangıçta gizli */
+            opacity: 0; 
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Efektler */
+        .flash-effect { animation: flash 0.15s ease-out; }
+        @keyframes flash { 0% { background-color: #fff; } 100% { background-color: #050505; } }
+
+        .shake-effect { animation: shake 0.5s infinite; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 10px;
+            font-size: 0.8rem;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-text">Canlandırmak için ekran bas</div>
+
+    <div id="scene-container">
+        <img id="character-img" src="https://media1.tenor.com/m/mc7CvBI7GmIAAAAC/screaming-victor-frankenstein.gif" alt="Scene">
+        
+        <div id="dialogue-box">
+            Neredeyim ben? Neden bana bakıyorsun?
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const imgElement = document.getElementById('character-img');
+        const dialogueBox = document.getElementById('dialogue-box');
+        
+        const gifScream = "https://media1.tenor.com/m/mc7CvBI7GmIAAAAC/screaming-victor-frankenstein.gif";
+        const gifLook = "https://media1.tenor.com/m/fDJps9pluPUAAAAd/looking-victor-frankenstein.gif";
+        
+        let clickCount = 0;
+        let isAnimating = false; 
+
+        body.addEventListener('click', () => {
+            if(isAnimating) return; 
+            
+            clickCount++;
+
+            if (clickCount < 3) {
+                // --- AŞAMA 1 & 2 ---
+                triggerShortShock();
+                
+            } else if (clickCount === 3) {
+                // --- AŞAMA 3: UYANIŞ ---
+                isAnimating = true; 
+
+                // 1. Şok efekti başlat
+                body.classList.add('flash-effect'); 
+                imgElement.classList.add('shake-effect'); 
+                
+                // --- GÜNCELLENEN KISIM: 1 SANİYE BEKLEME ---
+                setTimeout(() => {
+                    
+                    // 1. Titremeyi durdur
+                    imgElement.classList.remove('shake-effect');
+                    
+                    // 2. Görseli değiştir (Bakan Adam)
+                    imgElement.src = gifLook;
+                    
+                    // 3. Yazıyı göster
+                    dialogueBox.style.opacity = "1";
+                    dialogueBox.style.transform = "translateY(0)";
+
+                }, 1320);
+            }
+        });
+
+        function triggerShortShock() {
+         
+            const currentSrc = imgElement.src;
+            imgElement.src = "";
+            imgElement.src = currentSrc;
+
+            imgElement.classList.add('shake-effect');
+            body.classList.add('flash-effect');
+
+            setTimeout(() => {
+                imgElement.classList.remove('shake-effect');
+                body.classList.remove('flash-effect');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
