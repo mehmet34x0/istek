@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ufak Spoiler verelim</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #050505; color: white;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer; user-select: none;
+        }
+
+       
+        #start-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 2000; 
+            transition: opacity 1s ease;
+        }
+
+        #start-btn {
+            background: transparent;
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 20px 40px;
+            font-family: sans-serif;
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        #start-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        
+        #scene-container {
+            position: relative; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+        }
+
+        #character-img {
+            width: 95%; height: 85vh;
+            object-fit: contain;
+            border-radius: 10px;
+            transition: all 0.5s ease;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
+        }
+
+        #dialogue-box {
+            position: absolute; bottom: 5%;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #555;
+            padding: 15px 30px; border-radius: 8px;
+            font-size: 1.3rem; text-align: center;
+            z-index: 10; opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            color: #fff;
+        }
+
+     
+        .flash-effect { animation: flash 0.15s ease-out; }
+        @keyframes flash { 0% { background-color: #fff; } 100% { background-color: #050505; } }
+
+        .shake-effect { animation: shake 0.5s infinite; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .overlay-text {
+            position: absolute; top: 10px; font-size: 0.8rem;
+            opacity: 0.3; pointer-events: none; z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="thunder-audio" src="thunder-sound-375727.mp3" preload="auto" loop></audio>
+    <audio id="tension-audio" src="cinematic-music-sketches-11-cinematic-percussion-sketch-116186.mp3" preload="auto"></audio>
+
+    <div id="start-screen">
+        <button id="start-btn">BURAYA TIKLA GÖKÇE</button>
+    </div>
+
+    <div class="overlay-text" id="hint-text"></div>
+
+    <div id="scene-container">
+        <img id="character-img" src="https://media1.tenor.com/m/mc7CvBI7GmIAAAAC/screaming-victor-frankenstein.gif" alt="Scene">
+        <div id="dialogue-box">
+            Neredeyim ben? Neden bana bakıyorsun?
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const imgElement = document.getElementById('character-img');
+        const dialogueBox = document.getElementById('dialogue-box');
+        const hintText = document.getElementById('hint-text');
+        
+        const startScreen = document.getElementById('start-screen');
+        const startBtn = document.getElementById('start-btn');
+        const thunderAudio = document.getElementById('thunder-audio');
+        const tensionAudio = document.getElementById('tension-audio');
+        
+        const gifLook = "https://media1.tenor.com/m/fDJps9pluPUAAAAd/looking-victor-frankenstein.gif";
+        
+        let clickCount = 0;
+        let isAnimating = false;
+        let phase = 0; 
+
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            
+            thunderAudio.volume = 0.8;
+            thunderAudio.loop = true; 
+            thunderAudio.play();
+
+          
+            tensionAudio.volume = 1.0;
+            tensionAudio.play().then(() => {
+                tensionAudio.pause();
+                tensionAudio.currentTime = 0;
+            });
+
+            startScreen.style.opacity = '0';
+            setTimeout(() => {
+                startScreen.style.display = 'none';
+                phase = 1; 
+            }, 1000);
+        });
+
+     
+        body.addEventListener('click', () => {
+            if(phase === 0 || isAnimating) return; 
+
+            clickCount++;
+
+            
+            if (clickCount < 3) {
+                triggerShortShock();
+                
+            } else if (clickCount === 3) {
+              
+                isAnimating = true; 
+                body.classList.add('flash-effect'); 
+                imgElement.classList.add('shake-effect'); 
+                
+           
+                setTimeout(() => {
+                   
+                    thunderAudio.pause();
+                    
+                  
+                    tensionAudio.play();
+
+               
+                    imgElement.classList.remove('shake-effect');
+                    imgElement.src = gifLook;
+                    dialogueBox.style.opacity = "1";
+                    dialogueBox.style.transform = "translateY(0)";
+                    
+                    hintText.style.display = 'none';
+                }, 1320);
+            }
+        });
+
+        function triggerShortShock() {
+            const currentSrc = imgElement.src;
+            imgElement.src = "";
+            imgElement.src = currentSrc;
+            imgElement.classList.add('shake-effect');
+            body.classList.add('flash-effect');
+            setTimeout(() => {
+                imgElement.classList.remove('shake-effect');
+                body.classList.remove('flash-effect');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
