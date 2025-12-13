@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title> </title>
+    <title></title>
     <style>
         body {
             margin: 0;
@@ -48,6 +48,7 @@
             z-index: 9999;
             cursor: pointer;
             transition: opacity 0.5s ease;
+            -webkit-tap-highlight-color: transparent; /* Mobilde tıklama efektini kaldır */
         }
 
         #start-overlay h2 {
@@ -62,6 +63,8 @@
             color: #aaa;
             font-size: 1rem;
             margin-top: 10px;
+            text-align: center;
+            padding: 0 20px;
         }
 
         @keyframes pulse {
@@ -75,15 +78,15 @@
 
     <audio id="bgMusic" loop preload="auto">
         <source src="jingle-bells-bells-only-181672.mp3" type="audio/mpeg">
-        Tarayıcınız ses elementini desteklemiyor.
     </audio>
 
     <div id="start-overlay">
-        <h2>  Başlat               </h2>
-        <p>                                             </p>
+        <h2> BAŞLAT</h2>
+        <p></p>
+        <p style="font-size: 0.8rem; margin-top: 20px; color: #666;"></p>
     </div>
 
-    <h1>               </h1>
+    <h1></h1>
     <canvas id="canvas"></canvas>
 
     <script>
@@ -102,23 +105,32 @@
         let isRunning = false;
 
         // --- GİRİŞ VE SES BAŞLATMA ---
-        function startExperience() {
+        function startExperience(e) {
+            // Olayın varsayılan davranışını engelle (çift tetiklemeyi önlemek için)
+            if(e.type === 'touchstart') e.preventDefault();
+
             if (isRunning) return;
-            
-            // Sesi oynatmayı dene
-            var playPromise = audio.play();
 
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Otomatik oynatma başladı
-                    console.log("Ses başladı.");
-                })
-                .catch(error => {
-                    console.log("Ses başlatılamadı:", error);
-                    alert("Ses dosyası bulunamadı veya tarayıcı engelledi. Dosya isminin doğru olduğundan emin olun.");
-                });
-            }
+            // 1. Önce sesi başlatmayı dene
+            audio.play().then(() => {
+                console.log("Ses başarıyla başladı.");
+                startAnimation();
+            }).catch(error => {
+                console.error("Ses hatası:", error);
+                // Ses çalmasa bile animasyonu başlat, kullanıcıya hata mesajı gösterme
+                // Sadece konsola yaz, kullanıcı deneyimi bozulmasın.
+                // Genelde dosya yolu hatası ise buraya düşer.
+                startAnimation(); 
+                
+                // Eğer hata 'NotAllowedError' değilse (yani dosya yoksa) uyar
+                if(error.name !== 'NotAllowedError') {
+                    alert("Müzik dosyası bulunamadı! Dosya ismini kontrol edin: jingle-bells-bells-only-181672.mp3");
+                }
+            });
+        }
 
+        function startAnimation() {
+            // Ekranı kaldır
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
@@ -126,16 +138,15 @@
 
             isRunning = true;
             
+            // İlk roketleri fırlat
             setTimeout(() => launchRocket(canvas.width * 0.5, canvas.height * 0.3), 100);
             setTimeout(() => launchRocket(canvas.width * 0.2, canvas.height * 0.4), 800);
             setTimeout(() => launchRocket(canvas.width * 0.8, canvas.height * 0.2), 1500);
         }
 
+        // Hem click hem touchstart ekleyelim, hangisi önce gelirse o çalışsın
         overlay.addEventListener('click', startExperience);
-        overlay.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            startExperience();
-        });
+        overlay.addEventListener('touchstart', startExperience, { passive: false });
 
         // --- HAVAİ FİŞEK KODLARI ---
         let particles = [];
@@ -287,6 +298,7 @@
             if(isRunning) launchRocket(e.clientX, e.clientY);
         });
 
+        // Mobilde dokununca roket atması için
         canvas.addEventListener('touchstart', (e) => {
             if(!isRunning) return;
             e.preventDefault();
