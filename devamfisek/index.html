@@ -13,6 +13,8 @@
             overflow: hidden;
             font-family: 'Arial', sans-serif;
             touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         #bgCanvas { position: absolute; top: 0; left: 0; z-index: 1; }
@@ -25,7 +27,11 @@
             z-index: 9999; cursor: pointer; transition: opacity 0.5s ease;
         }
 
-        #start-overlay h2 { color: #fff; font-size: 2.5rem; margin-bottom: 20px; text-align: center; animation: pulse 1.5s infinite; font-family: 'Brush Script MT', cursive; }
+        #start-overlay h2 { 
+            color: #fff; font-size: 2.5rem; margin-bottom: 20px; 
+            text-align: center; animation: pulse 1.5s infinite; 
+            font-family: 'Brush Script MT', cursive; 
+        }
         #start-overlay p { color: #aaa; font-size: 1.2rem; margin-top: 10px; }
 
         @keyframes pulse {
@@ -37,7 +43,7 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop preload="auto">
+    <audio id="bgMusic" loop preload="auto" playsinline webkit-playsinline>
         <source src="ses.mp3" type="audio/mpeg">
     </audio>
 
@@ -58,8 +64,8 @@
 
         // --- YAZI AYARLARI ---
         const targetText = "ATATÜRKÜ SEVMEYENİN AMK";
-        const textDuration = 8000; // 6 Saniye (Milisaniye cinsinden)
-        let startTime = null; // Animasyon başlangıç zamanı
+        const textDuration = 8000; 
+        let startTime = null; 
 
         const canvas = document.getElementById('fireworkCanvas');
         const ctx = canvas.getContext('2d');
@@ -151,7 +157,7 @@
             if (Math.random() < 0.005) shootingStars.push(new ShootingStar());
             for (let i = 0; i < shootingStars.length; i++) { shootingStars[i].update(); shootingStars[i].draw(); if (shootingStars[i].opacity <= 0 || shootingStars[i].x > w || shootingStars[i].y > h) { shootingStars.splice(i, 1); i--; } }
 
-            // --- GELİŞMİŞ YAZI EFEKTİ ---
+            // --- YAZI EFEKTİ ---
             if (isRunning) {
                 if (!startTime) startTime = timestamp;
                 let elapsed = timestamp - startTime;
@@ -161,43 +167,30 @@
                 bgCtx.font = "bold " + fontSize + "px Arial";
                 bgCtx.textAlign = "center";
                 
-                // Her harf için ayrı işlem
-                let startX = w / 2 - (ctx.measureText(targetText).width * fontSize/10) / 2; // Basit ortalama
-                // Daha düzgün ortalama için tam genişliği ölçmek lazım ama canvas'ta harf harf yazmak zor,
-                // O yüzden basit bir ortalama yerine harf harf döngüyle ilerleme (fade effect)
-                
-                // Metni harf harf parçala
                 let letters = targetText.split("");
                 let totalWidth = bgCtx.measureText(targetText).width;
                 let currentX = (w - totalWidth) / 2;
 
                 letters.forEach((letter, index) => {
-                    // Bu harf ne zaman görünmeye başlamalı?
-                    // Toplam süreyi harf sayısına bölerek bir "dalga" efekti oluşturuyoruz.
                     let letterStart = (textDuration * 0.8) * (index / letters.length);
                     
                     if (elapsed > letterStart) {
-                        // Harfin görünürlük süresi (0'dan 1'e ne kadar sürede çıksın)
-                        let letterAlpha = (elapsed - letterStart) / 1000; // 1 saniyede netleşsin
+                        let letterAlpha = (elapsed - letterStart) / 1000;
                         if (letterAlpha > 1) letterAlpha = 1;
-                        
-                        // Blur efekti (Görünürlük arttıkça blur azalsın)
                         let blurAmount = 20 - (letterAlpha * 20);
                         if (blurAmount < 0) blurAmount = 0;
 
                         bgCtx.globalAlpha = letterAlpha;
                         bgCtx.shadowColor = `rgba(255, 255, 255, ${letterAlpha})`; 
-                        bgCtx.shadowBlur = blurAmount + 10; // Parlama + Blur
+                        bgCtx.shadowBlur = blurAmount + 10;
                         bgCtx.fillStyle = `rgba(255, 255, 255, ${letterAlpha})`;
                         
                         bgCtx.fillText(letter, currentX, h * 0.4);
                     }
                     currentX += bgCtx.measureText(letter).width;
                 });
-                
                 bgCtx.restore();
             }
-            // ---------------------------
 
             bgCtx.fillStyle = "#0a0a0a";
             buildings.forEach(b => { bgCtx.fillRect(b.x, b.y, b.w, b.h); b.windows.forEach(win => { bgCtx.fillStyle = win.color; bgCtx.fillRect(win.x, win.y, 3, 5); }); bgCtx.fillStyle = "#0a0a0a"; });
@@ -215,14 +208,33 @@
         init();
         requestAnimationFrame(animate);
 
+        // --- GÜÇLENDİRİLMİŞ MOBİL SES ÇÖZÜMÜ ---
         function startExperience(e) {
-            if(e.type === 'touchstart') e.preventDefault();
-            if (isRunning) return;
-            isRunning = true;
-            // startTime burada sıfırlanacak, animate içinde set edilecek
+            // Mobilde ses kilidini açmak için preventDefault kullanmıyoruz
+            // çünkü tarayıcı bunu "kullanıcı etkileşimi" olarak saymayabilir.
             
-            overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 500);
-            audio.play().catch(err => console.log("Ses hatası:", err));
+            if (isRunning) return;
+
+            // Sesi başlatmayı dene
+            audio.volume = 1.0;
+            const playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Otomatik oynatma başladı
+                    console.log("Ses başarıyla başladı.");
+                })
+                .catch(error => {
+                    // Otomatik oynatma engellendi
+                    console.log("Ses başlatılamadı, tekrar deneniyor...", error);
+                });
+            }
+            
+            isRunning = true;
+            
+            overlay.style.opacity = '0'; 
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            
             setTimeout(() => launchRocket(w*0.5, h*0.3), 500);
             setTimeout(() => launchRocket(w*0.2, h*0.4), 1200);
             setTimeout(() => launchRocket(w*0.8, h*0.2), 2000);
@@ -230,10 +242,22 @@
 
         function launchRocket(x, y) { if(isRunning) rockets.push(new Rocket(x, y)); }
 
-        overlay.addEventListener('mousedown', startExperience);
-        overlay.addEventListener('touchstart', startExperience, { passive: false });
+        // Hem 'click' hem 'touchstart' ekliyoruz, mobilde garanti olsun diye
+        overlay.addEventListener('click', startExperience);
+        overlay.addEventListener('touchstart', (e) => {
+            // Sadece dokunmayı algıla, default'u engelleme ki ses kilidi açılsın
+            startExperience(e);
+        }, { passive: false });
+
         document.addEventListener('mousedown', (e) => { if(isRunning && e.target !== overlay) launchRocket(e.clientX, e.clientY); });
-        document.addEventListener('touchstart', (e) => { if(isRunning && e.target !== overlay) { for (let i=0; i<e.touches.length; i++) launchRocket(e.touches[i].clientX, e.touches[i].clientY); }}, { passive: false });
+        
+        document.addEventListener('touchstart', (e) => { 
+            if(isRunning && e.target !== overlay) { 
+                // Roket fırlatma için preventDefault okey ama ses için ilk tıklama önemliydi
+                e.preventDefault(); 
+                for (let i=0; i<e.touches.length; i++) launchRocket(e.touches[i].clientX, e.touches[i].clientY); 
+            }
+        }, { passive: false });
 
     </script>
 </body>
