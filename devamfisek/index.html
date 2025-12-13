@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title></title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020014;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            touch-action: none;
+        }
+
+        #bgCanvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        #fireworkCanvas { position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; }
+
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; cursor: pointer; transition: opacity 0.5s ease;
+        }
+
+        #start-overlay h2 { color: #fff; font-size: 2.5rem; margin-bottom: 20px; text-align: center; animation: pulse 1.5s infinite; font-family: 'Brush Script MT', cursive; }
+        #start-overlay p { color: #aaa; font-size: 1.2rem; margin-top: 10px; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 10px #fff; }
+            50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 20px #ff00de; }
+            100% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 10px #fff; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="ses.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="start-overlay">
+        <h2>BAS BAKALIM</h2>
+        <p></p>
+    </div>
+
+    <canvas id="bgCanvas"></canvas>
+    <canvas id="fireworkCanvas"></canvas>
+
+    <script>
+        // --- AYARLAR ---
+        const fireNumber = 30;
+        const range = 100;
+        const gravity = 0.05;
+        const snowCount = 200; 
+
+        // --- YAZI AYARLARI ---
+        const targetText = "ATATÜRKÜ SEVMEYENİN AMK";
+        const textDuration = 8000; // 6 Saniye (Milisaniye cinsinden)
+        let startTime = null; // Animasyon başlangıç zamanı
+
+        const canvas = document.getElementById('fireworkCanvas');
+        const ctx = canvas.getContext('2d');
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        const overlay = document.getElementById('start-overlay');
+        const audio = document.getElementById('bgMusic');
+
+        let w, h;
+        let isRunning = false;
+
+        let particles = [];
+        let rockets = [];
+        let staticStars = [];
+        let buildings = [];
+        let snowParticles = [];
+        let shootingStars = [];
+
+        function randColor() { return `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`; }
+        function random(min, max) { return Math.random() * (max - min) + min; }
+
+        function init() {
+            w = window.innerWidth; h = window.innerHeight;
+            canvas.width = w; canvas.height = h;
+            bgCanvas.width = w; bgCanvas.height = h;
+
+            staticStars = [];
+            for (let i = 0; i < 150; i++) {
+                staticStars.push({ x: Math.random()*w, y: Math.random()*(h*0.7), r: Math.random()*1.2, alpha: Math.random() });
+            }
+
+            buildings = [];
+            let currentX = 0;
+            while (currentX < w) {
+                let bw = random(40, 100); let bh = random(50, 200);
+                if(w < 600) bh = random(40, 120); 
+                let windows = [];
+                if (Math.random() > 0.3) {
+                    for(let wy = h - bh + 10; wy < h - 10; wy += 15) {
+                        for(let wx = currentX + 5; wx < currentX + bw - 5; wx += 10) {
+                            if(Math.random() > 0.6) windows.push({x: wx, y: wy, color: Math.random() > 0.8 ? "#ffeb3b" : "#7a7a7a"});
+                        }
+                    }
+                }
+                buildings.push({ x: currentX, y: h - bh, w: bw, h: bh, windows: windows });
+                currentX += bw - 2;
+            }
+
+            snowParticles = [];
+            for(let i = 0; i < snowCount; i++) snowParticles.push(new Snow());
+        }
+
+        class Snow {
+            constructor() { this.reset(); this.y = Math.random() * h; }
+            reset() { this.x = Math.random()*w; this.y = random(-h, 0); this.r = random(0.5, 3); this.speedY = random(0.5, 2); this.speedX = random(-0.5, 0.5); this.opacity = random(0.3, 0.8); }
+            update() { this.y += this.speedY; this.x += this.speedX; if (this.y > h) this.reset(); }
+            draw() { bgCtx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; bgCtx.beginPath(); bgCtx.arc(this.x, this.y, this.r, 0, Math.PI*2); bgCtx.fill(); }
+        }
+
+        class ShootingStar {
+            constructor() { this.x = random(w*0.2, w*0.8); this.y = random(0, h*0.3); this.length = random(50, 100); this.speed = random(10, 20); this.angle = Math.PI/4 + random(-0.1, 0.1); this.opacity = 1; }
+            update() { this.x += this.speed*Math.cos(this.angle); this.y += this.speed*Math.sin(this.angle); this.opacity -= 0.02; }
+            draw() { if (this.opacity <= 0) return; const g = bgCtx.createLinearGradient(this.x, this.y, this.x - this.length*Math.cos(this.angle), this.y - this.length*Math.sin(this.angle)); g.addColorStop(0, `rgba(255,255,255,${this.opacity})`); g.addColorStop(1, `rgba(255,255,255,0)`); bgCtx.beginPath(); bgCtx.strokeStyle = g; bgCtx.lineWidth = 2; bgCtx.moveTo(this.x, this.y); bgCtx.lineTo(this.x - this.length*Math.cos(this.angle), this.y - this.length*Math.sin(this.angle)); bgCtx.stroke(); }
+        }
+
+        class Rocket {
+            constructor(targetX, targetY) { this.x = targetX; this.y = h; this.targetY = targetY; this.color = randColor(); this.vy = -random(10, 15); this.size = 3; this.projectiles = []; }
+            update(index) {
+                this.y += this.vy; this.vy += gravity / 2;
+                if (Math.random() < 0.6) this.projectiles.push({x: this.x, y: this.y, vy: random(1, 2), life: 15, color: this.color});
+                if (this.y <= this.targetY || this.vy >= 0) { Math.random() < 0.3 ? makeHeartFirework(this.x, this.y, this.color) : makeCircleFirework({x: this.x, y: this.y}, this.color); rockets.splice(index, 1); }
+            }
+            draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.ellipse(this.x, this.y, this.size, this.size*2, 0, 0, Math.PI * 2); ctx.fill(); for(let i=0; i<this.projectiles.length; i++) { let p=this.projectiles[i]; ctx.fillStyle=p.color; ctx.globalAlpha=p.life/15; ctx.fillRect(p.x-1, p.y, 2, 4); p.y+=p.vy; p.life--; if(p.life<=0){this.projectiles.splice(i,1);i--;}} ctx.globalAlpha=1; }
+        }
+
+        function makeCircleFirework(fire, color){let v=random(5,8);let max=fireNumber*5;for(let i=0;i<max;i++){let rad=(i*Math.PI*2)/max;particles.push({x:fire.x,y:fire.y,size:random(1.5,2.5),fill:color,vx:Math.cos(rad)*v+(Math.random()-0.5)*0.5,vy:Math.sin(rad)*v+(Math.random()-0.5)*0.5,ay:gravity,life:random(range/2,range)})}}
+        function makeHeartFirework(x,y,color){let v=random(4,7);let max=fireNumber*5;for(let i=0;i<max;i++){let rad=(i*Math.PI*2)/max;let hX=16*Math.pow(Math.sin(rad),3);let hY=-(13*Math.cos(rad)-5*Math.cos(2*rad)-2*Math.cos(3*rad)-Math.cos(4*rad));particles.push({x:x,y:y,size:random(1.5,3),fill:color,vx:(hX/16)*v+(Math.random()-0.5)*0.5,vy:(hY/13)*v+(Math.random()-0.5)*0.5,ay:gravity*0.8,life:random(range/1.5,range)})}}
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            bgCtx.clearRect(0, 0, w, h);
+            let grad = bgCtx.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, "#020014"); grad.addColorStop(1, "#180829"); bgCtx.fillStyle = grad; bgCtx.fillRect(0, 0, w, h);
+
+            bgCtx.fillStyle = "white";
+            staticStars.forEach(s => { bgCtx.globalAlpha = s.alpha; bgCtx.beginPath(); bgCtx.arc(s.x, s.y, s.r, 0, Math.PI*2); bgCtx.fill(); });
+            bgCtx.globalAlpha = 1;
+
+            if (Math.random() < 0.005) shootingStars.push(new ShootingStar());
+            for (let i = 0; i < shootingStars.length; i++) { shootingStars[i].update(); shootingStars[i].draw(); if (shootingStars[i].opacity <= 0 || shootingStars[i].x > w || shootingStars[i].y > h) { shootingStars.splice(i, 1); i--; } }
+
+            // --- GELİŞMİŞ YAZI EFEKTİ ---
+            if (isRunning) {
+                if (!startTime) startTime = timestamp;
+                let elapsed = timestamp - startTime;
+                
+                bgCtx.save();
+                let fontSize = Math.min(w, h) * 0.05; 
+                bgCtx.font = "bold " + fontSize + "px Arial";
+                bgCtx.textAlign = "center";
+                
+                // Her harf için ayrı işlem
+                let startX = w / 2 - (ctx.measureText(targetText).width * fontSize/10) / 2; // Basit ortalama
+                // Daha düzgün ortalama için tam genişliği ölçmek lazım ama canvas'ta harf harf yazmak zor,
+                // O yüzden basit bir ortalama yerine harf harf döngüyle ilerleme (fade effect)
+                
+                // Metni harf harf parçala
+                let letters = targetText.split("");
+                let totalWidth = bgCtx.measureText(targetText).width;
+                let currentX = (w - totalWidth) / 2;
+
+                letters.forEach((letter, index) => {
+                    // Bu harf ne zaman görünmeye başlamalı?
+                    // Toplam süreyi harf sayısına bölerek bir "dalga" efekti oluşturuyoruz.
+                    let letterStart = (textDuration * 0.8) * (index / letters.length);
+                    
+                    if (elapsed > letterStart) {
+                        // Harfin görünürlük süresi (0'dan 1'e ne kadar sürede çıksın)
+                        let letterAlpha = (elapsed - letterStart) / 1000; // 1 saniyede netleşsin
+                        if (letterAlpha > 1) letterAlpha = 1;
+                        
+                        // Blur efekti (Görünürlük arttıkça blur azalsın)
+                        let blurAmount = 20 - (letterAlpha * 20);
+                        if (blurAmount < 0) blurAmount = 0;
+
+                        bgCtx.globalAlpha = letterAlpha;
+                        bgCtx.shadowColor = `rgba(255, 255, 255, ${letterAlpha})`; 
+                        bgCtx.shadowBlur = blurAmount + 10; // Parlama + Blur
+                        bgCtx.fillStyle = `rgba(255, 255, 255, ${letterAlpha})`;
+                        
+                        bgCtx.fillText(letter, currentX, h * 0.4);
+                    }
+                    currentX += bgCtx.measureText(letter).width;
+                });
+                
+                bgCtx.restore();
+            }
+            // ---------------------------
+
+            bgCtx.fillStyle = "#0a0a0a";
+            buildings.forEach(b => { bgCtx.fillRect(b.x, b.y, b.w, b.h); b.windows.forEach(win => { bgCtx.fillStyle = win.color; bgCtx.fillRect(win.x, win.y, 3, 5); }); bgCtx.fillStyle = "#0a0a0a"; });
+
+            snowParticles.forEach(snow => { snow.update(); snow.draw(); });
+
+            ctx.clearRect(0, 0, w, h);
+            if (isRunning) {
+                rockets.forEach((r, i) => { r.draw(); r.update(i); });
+                for(let i=0; i<particles.length; i++){let p=particles[i]; ctx.fillStyle=p.fill; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill(); p.x+=p.vx; p.y+=p.vy; p.vy+=p.ay; p.life--; p.size*=0.96; if(p.life<=0||p.size<0.1){particles.splice(i,1);i--;}}
+            }
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        requestAnimationFrame(animate);
+
+        function startExperience(e) {
+            if(e.type === 'touchstart') e.preventDefault();
+            if (isRunning) return;
+            isRunning = true;
+            // startTime burada sıfırlanacak, animate içinde set edilecek
+            
+            overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 500);
+            audio.play().catch(err => console.log("Ses hatası:", err));
+            setTimeout(() => launchRocket(w*0.5, h*0.3), 500);
+            setTimeout(() => launchRocket(w*0.2, h*0.4), 1200);
+            setTimeout(() => launchRocket(w*0.8, h*0.2), 2000);
+        }
+
+        function launchRocket(x, y) { if(isRunning) rockets.push(new Rocket(x, y)); }
+
+        overlay.addEventListener('mousedown', startExperience);
+        overlay.addEventListener('touchstart', startExperience, { passive: false });
+        document.addEventListener('mousedown', (e) => { if(isRunning && e.target !== overlay) launchRocket(e.clientX, e.clientY); });
+        document.addEventListener('touchstart', (e) => { if(isRunning && e.target !== overlay) { for (let i=0; i<e.touches.length; i++) launchRocket(e.touches[i].clientX, e.touches[i].clientY); }}, { passive: false });
+
+    </script>
+</body>
+</html>
