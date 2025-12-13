@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title> </title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            touch-action: none;
+        }
+
+        h1 {
+            position: absolute;
+            top: 5%;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 0, 50, 0.6);
+            z-index: 10;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Giriş Ekranı (Overlay) */
+        #start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        #start-overlay h2 {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+        }
+
+        #start-overlay p {
+            color: #aaa;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 20px #ff00de; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="jingle-bells-bells-only-181672.mp3" type="audio/mpeg">
+        Tarayıcınız ses elementini desteklemiyor.
+    </audio>
+
+    <div id="start-overlay">
+        <h2>  Başlat               </h2>
+        <p>                                             </p>
+    </div>
+
+    <h1>               </h1>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('start-overlay');
+        const audio = document.getElementById('bgMusic');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let isRunning = false;
+
+        // --- GİRİŞ VE SES BAŞLATMA ---
+        function startExperience() {
+            if (isRunning) return;
+            
+            // Sesi oynatmayı dene
+            var playPromise = audio.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Otomatik oynatma başladı
+                    console.log("Ses başladı.");
+                })
+                .catch(error => {
+                    console.log("Ses başlatılamadı:", error);
+                    alert("Ses dosyası bulunamadı veya tarayıcı engelledi. Dosya isminin doğru olduğundan emin olun.");
+                });
+            }
+
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+
+            isRunning = true;
+            
+            setTimeout(() => launchRocket(canvas.width * 0.5, canvas.height * 0.3), 100);
+            setTimeout(() => launchRocket(canvas.width * 0.2, canvas.height * 0.4), 800);
+            setTimeout(() => launchRocket(canvas.width * 0.8, canvas.height * 0.2), 1500);
+        }
+
+        overlay.addEventListener('click', startExperience);
+        overlay.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startExperience();
+        });
+
+        // --- HAVAİ FİŞEK KODLARI ---
+        let particles = [];
+        let rockets = [];
+        const fireNumber = 40;
+        const range = 100;
+        const gravity = 0.05;
+
+        function randColor() {
+            const h = Math.floor(Math.random() * 360);
+            return `hsl(${h}, 100%, 60%)`;
+        }
+
+        class Rocket {
+            constructor(targetX, targetY) {
+                this.x = targetX;
+                this.y = canvas.height;
+                this.targetY = targetY;
+                this.color = randColor();
+                this.vy = -Math.random() * 3 - 12;
+                this.size = 3;
+                this.projectiles = [];
+            }
+
+            update(index) {
+                this.y += this.vy;
+                this.vy += gravity / 2;
+
+                if (Math.random() < 0.5) {
+                     this.projectiles.push({x: this.x, y: this.y, vy: Math.random() + 1, life: 10, color: this.color});
+                }
+
+                if (this.y <= this.targetY || this.vy >= 0) {
+                    if (Math.random() < 0.3) {
+                        makeHeartFirework(this.x, this.y, this.color);
+                    } else {
+                        makeCircleFirework({ x: this.x, y: this.y }, this.color);
+                    }
+                    rockets.splice(index, 1);
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.size, this.size*2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                for(let i = 0; i < this.projectiles.length; i++) {
+                    let p = this.projectiles[i];
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.life / 10;
+                    ctx.fillRect(p.x - 1, p.y, 2, 4);
+                    p.y += p.vy;
+                    p.life--;
+                    if(p.life <= 0) { this.projectiles.splice(i, 1); i--; }
+                }
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function makeCircleFirework(fire, predefinedColor) {
+            var color = predefinedColor || randColor();
+            var velocity = Math.random() * 2 + 6;
+            var max = fireNumber * 5;
+            
+            for (var i = 0; i < max; i++) {
+                var rad = (i * Math.PI * 2) / max;
+                var firework = {
+                    x: fire.x,
+                    y: fire.y,
+                    size: Math.random() + 1.5,
+                    fill: color,
+                    vx: Math.cos(rad) * velocity + (Math.random() - 0.5) * 0.5,
+                    vy: Math.sin(rad) * velocity + (Math.random() - 0.5) * 0.5,
+                    ay: gravity,
+                    life: Math.round((Math.random() * range) / 2) + range / 2
+                };
+                particles.push(firework);
+            }
+        }
+
+        function makeHeartFirework(x, y, color) {
+            var velocity = Math.random() * 3 + 5;
+            var max = fireNumber * 6;
+
+            for (var i = 0; i < max; i++) {
+                var rad = (i * Math.PI * 2) / max;
+                var heartX = 16 * Math.pow(Math.sin(rad), 3);
+                var heartY = -(13 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad));
+
+                var vx = (heartX / 16) * velocity; 
+                var vy = (heartY / 13) * velocity;
+
+                vx += (Math.random() - 0.5) * 1;
+                vy += (Math.random() - 0.5) * 1;
+
+                var firework = {
+                    x: x,
+                    y: y,
+                    size: Math.random() * 2 + 2,
+                    fill: color,
+                    vx: vx,
+                    vy: vy,
+                    ay: gravity * 0.8,
+                    life: Math.round((Math.random() * range) / 1.5) + range / 1.5,
+                };
+                particles.push(firework);
+            }
+        }
+
+        function update() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (isRunning) {
+                for (let i = 0; i < rockets.length; i++) {
+                    rockets[i].draw();
+                    rockets[i].update(i);
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    ctx.fillStyle = p.fill;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += p.ay;
+                    p.life--;
+                    p.size *= 0.98;
+
+                    if (p.life <= 0 || p.size < 0.1) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        function launchRocket(x, y) {
+             if(isRunning) rockets.push(new Rocket(x, y));
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if(isRunning) launchRocket(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            if(!isRunning) return;
+            e.preventDefault();
+            for (let i = 0; i < e.touches.length; i++) {
+                launchRocket(e.touches[i].clientX, e.touches[i].clientY);
+            }
+        }, { passive: false });
+
+        update();
+
+    </script>
+</body>
+</html>
